@@ -1,8 +1,8 @@
 <template id="stop-watch">
 	<v-ons-page>
 		<div class="stop-watch">
-			<span style="">50:15</span><br>
-			<v-ons-icon icon="md-play-circle" class="stop-watch__icon"></v-ons-icon>
+			<span style="" id="stop-watch">00:00</span><br>
+			<v-ons-icon icon="md-play-circle" @click="startStopWatch" class="stop-watch__icon"></v-ons-icon>
 		</div>
 		<v-ons-action-sheet :visible="actionSheetVisible" :title="actionSheetTitle" cancelable>
 			<v-ons-list>
@@ -19,18 +19,27 @@
 				</v-ons-list-item>
 				
 			</v-ons-list>
-			
 		</v-ons-action-sheet>
 	</v-ons-page>
 </template>
 
 <script>
 	export default {
+		mounted: function(){
+			this.$nextTick(function(){
+				$('#stop-watch').runner();
+			})
+		},
 		data: function(){
 			return {
 				actionSheetTitle: 'Categories',
 				actionSheetVisible: true,
 				checkbox: 'checkbox'
+			}
+		},
+		methods: {
+			startStopWatch: function(){
+				$('#stop-watch').runner('toggle');
 			}
 		}
 	};
