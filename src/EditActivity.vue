@@ -8,7 +8,7 @@
 		</v-ons-toolbar>
 		<v-ons-list>
 			<v-ons-list-header>
-				Text input
+				<div class="header-list">Text input</div>
 			</v-ons-list-header>
 			<v-ons-list-item>
 				<div class="left"><v-ons-icon icon="md-home"></v-ons-icon></div>
@@ -44,8 +44,10 @@
 
 <script>
 	export default {
+		
 		data: function(){
 			return {
+				key: 'Edit Activity',
 				name: '',
 				actionSheetTitle: 'Categories',
 				actionSheetVisible: false,

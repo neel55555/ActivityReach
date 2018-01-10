@@ -63,7 +63,7 @@
 <script>
 	
 	import WATCH from './StopWatch.vue';
-	import RECENT from './Recent.vue';
+	import RECENT_ACTIVITY from './RecentActivity.vue';
 	
 	export default {
 	
@@ -82,7 +82,7 @@
 					{
 						icon: this.md() ? null : 'ion-ios-bell',
 						label: 'Recent',
-						page: RECENT,
+						page: RECENT_ACTIVITY,
 						key: "recent"
 					}
 				]

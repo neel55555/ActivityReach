@@ -1,6 +1,6 @@
 //DEPENDENCIES
-import {jQuery as $} from 'jquery';
-import runner from 'jquery.runner';
+//import $ from 'jquery';
+//import runner from 'jquery.runner';
 import Vue from 'vue';
 import VueOnsen from 'vue-onsenui';
 
