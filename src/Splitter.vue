@@ -53,7 +53,7 @@
 			<v-ons-splitter-content>
 				<v-ons-page>
 					<toolbar title="ActivityReach" @menu-button-click="menuOpen"></toolbar>
-					<v-ons-tabbar @edit-button-click="pushPage" swipeable position="auto" :tabs="tabs" :visible="true" :index.sync="tabActiveIndex"></v-ons-tabbar>
+					<v-ons-tabbar @add-cat-btn-clicked="pushPage" @edit-button-click="pushPage" swipeable position="auto" :tabs="tabs" :visible="true" :index.sync="tabActiveIndex"></v-ons-tabbar>
 				</v-ons-page>
 			</v-ons-splitter-content>
 		</v-ons-splitter>

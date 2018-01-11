@@ -14,7 +14,7 @@
 				activeIndex: 0,
 				isMenuOpen: false,
 				openSide: false,
-				pageStack: [EDIT_ACTIVITY, SPLITTER]
+				pageStack: [SPLITTER]
 			};
 		},
 		

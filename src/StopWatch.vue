@@ -1,10 +1,10 @@
 <template id="stop-watch">
 	<v-ons-page>
 		<div class="stop-watch">
-			<span style="" id="stop-watch">00:00</span><br>
-			<v-ons-icon icon="md-play-circle" @click="startStopWatch" class="stop-watch__icon"></v-ons-icon>
+			<span id="stop-watch">00:00</span><br>
+			<v-ons-icon :icon="toggleButtonIcon" @click="toggleStopWatch" class="stop-watch__icon"></v-ons-icon>
 		</div>
-		<v-ons-action-sheet :visible="actionSheetVisible" :title="actionSheetTitle" cancelable>
+		<v-ons-action-sheet :visible.sync="actionSheetVisible" :title="actionSheetTitle" cancelable>
 			<v-ons-list>
 				<v-ons-list-item tappable>
 					<div class="left">
@@ -24,23 +24,49 @@
 </template>
 
 <script>
+
+	import CATEGORY from './Category.vue';
+	
 	export default {
+		
 		mounted: function(){
-			this.$nextTick(function(){
+			var self = this;
+			
+			self.$nextTick(function(){
 				$('#stop-watch').runner();
+				
+				$('#stop-watch').on('runnerStart', function(){
+					self.toggleButtonIcon = 'md-pause-circle';
+				});
+				
+				$('#stop-watch').on('runnerStop', function(){
+					self.actionSheetVisible = true;
+					self.toggleButtonIcon = 'md-play-circle';
+				});
+				
+				$('.addCatIcon').click(function(){
+					self.$emit('add-cat-btn-clicked', CATEGORY);
+					self.actionSheetVisible = false;
+				})
 			})
 		},
 		data: function(){
 			return {
-				actionSheetTitle: 'Categories',
-				actionSheetVisible: true,
-				checkbox: 'checkbox'
+				actionSheetTitle: 'Categories<span class="addCatIcon" style="font-size:30px;float:right;padding-right:15px">+</span>',
+				actionSheetVisible: false,
+				checkbox: 'checkbox',
+				toggleButtonIcon: 'md-play-circle',
+				categories: {}
 			}
 		},
 		methods: {
-			startStopWatch: function(){
+			toggleStopWatch: function(){
 				$('#stop-watch').runner('toggle');
 			}
 		}
 	};
 </script>
+
+<style scoped>
+	
+</style>
