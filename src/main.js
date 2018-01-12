@@ -47,9 +47,12 @@ schemaBuilder.createTable('activity').
 	addPrimaryKey(['id']);
 	
 schemaBuilder.connect().then(function(db){
-	db.import(data_init).then(function(){
-		console.log('Data imported successfully');
-	});
+	
+	if(!localStorage.is_database_imported){
+		db.import(data_init).then(function(){
+			localStorage.is_database_imported = 'true';
+		});
+	};
 });
 	
 	

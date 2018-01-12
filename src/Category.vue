@@ -35,8 +35,6 @@
 
 
 <script>
-
-	
 	
 	export default {
 		methods: {

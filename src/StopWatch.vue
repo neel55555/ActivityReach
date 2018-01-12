@@ -1,10 +1,13 @@
 <template id="stop-watch">
 	<v-ons-page>
 		<div class="stop-watch">
-			<span id="stop-watch">00:00</span><br>
+			<span id="stop-watch">00:00:00:00</span><br>
 			<v-ons-icon :icon="toggleButtonIcon" @click="toggleStopWatch" class="stop-watch__icon"></v-ons-icon>
 		</div>
-		<v-ons-action-sheet :visible.sync="actionSheetVisible" :title="actionSheetTitle" cancelable>
+		<v-ons-action-sheet :visible.sync="actionSheetVisible" cancelable>
+			<div class="action-sheet-title">
+				Categories<span @click="addCatIconClicked" class="addCatIcon">+</span>
+			</div>
 			<v-ons-list>
 				<v-ons-list-item tappable>
 					<div class="left">
@@ -43,16 +46,11 @@
 					self.actionSheetVisible = true;
 					self.toggleButtonIcon = 'md-play-circle';
 				});
-				
-				$('.addCatIcon').click(function(){
-					self.$emit('add-cat-btn-clicked', CATEGORY);
-					self.actionSheetVisible = false;
-				})
 			})
 		},
 		data: function(){
 			return {
-				actionSheetTitle: 'Categories<span class="addCatIcon" style="font-size:30px;float:right;padding-right:15px">+</span>',
+				actionSheetTitle: '',
 				actionSheetVisible: false,
 				checkbox: 'checkbox',
 				toggleButtonIcon: 'md-play-circle',
@@ -62,11 +60,19 @@
 		methods: {
 			toggleStopWatch: function(){
 				$('#stop-watch').runner('toggle');
+			},
+			addCatIconClicked: function(){
+				this.$emit('add-cat-btn-clicked', CATEGORY);
+				this.actionSheetVisible = false;
 			}
 		}
 	};
 </script>
 
 <style scoped>
-	
+	.addCatIcon{
+		font-size:30px;
+		float:right;
+		padding-right:15px
+	}
 </style>
