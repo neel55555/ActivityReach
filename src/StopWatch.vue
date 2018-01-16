@@ -9,18 +9,17 @@
 				Categories<span @click="addCatIconClicked" class="addCatIcon">+</span>
 			</div>
 			<v-ons-list>
-				<v-ons-list-item tappable>
-					<div class="left">
-						<v-ons-icon icon="md-home" size="24px"></v-ons-icon>
-					</div>
-					<div class="center">
-						Running
-					</div>
-					<div class="right">
-						<v-ons-checkbox :input-id="checkbox"></v-ons-checkbox>
-					</div>
+				<v-ons-list-item v-for="category in categories" :key="category.id" tappable>
+					<label class="left" :for="'catradio-' + category.id">
+						<v-ons-icon :icon="category['icon']" size="24px"></v-ons-icon>
+					</label>
+					<label class="center" :for="'catradio-' + category.id">
+						{{category['name']}}
+					</label>
+					<label class="right">
+						<v-ons-radio :value="category.id" v-model="catRadioValue" :input-id="'catradio-' + category.id"></v-ons-radio>
+					</label>
 				</v-ons-list-item>
-				
 			</v-ons-list>
 		</v-ons-action-sheet>
 	</v-ons-page>
@@ -29,6 +28,7 @@
 <script>
 
 	import CATEGORY from './Category.vue';
+	import Database from './database/database.js';
 	
 	export default {
 		
@@ -46,6 +46,19 @@
 					self.actionSheetVisible = true;
 					self.toggleButtonIcon = 'md-play-circle';
 				});
+				
+				var SB = lf.schema.create('ActivityReach', 1);
+				Database.createTable(SB);
+				SB.connect().then(function(db){
+					Database.populate(db);
+					var C = db.getSchema().table('category');
+					var SC = db.getSchema().table('sub_category');
+					db.select(C.name,C.id,C.icon).from(C).exec().then(function(result){
+						result.forEach(function(row){
+							self.categories.push(row);
+						});
+					});
+				});
 			})
 		},
 		data: function(){
@@ -54,7 +67,25 @@
 				actionSheetVisible: false,
 				checkbox: 'checkbox',
 				toggleButtonIcon: 'md-play-circle',
-				categories: {}
+				categories: [],
+				catRadioValue: ''
+			}
+		},
+		watch:{
+			actionSheetVisible: function(value){
+				var self = this;
+				if(!value){
+					self.catRadioValue = '';
+				};
+			},
+			catRadioValue: function(value){
+				var self = this;
+				if(value !== ''){
+					var confirmSave = self.$ons.notification.confirm('Want to save?');
+					confirmSave.then(function(value){
+						self.actionSheetVisible = false;
+					});
+				};
 			}
 		},
 		methods: {

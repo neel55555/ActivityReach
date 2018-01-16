@@ -1,35 +1,15 @@
 <template>
 	<v-ons-page>
 		<v-ons-toolbar>
-			
 			<div class="left"><v-ons-back-button></v-ons-back-button></div>
 			<div class="center">Category</div>
-			
 		</v-ons-toolbar>
-		<v-ons-card tappable>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
-		<v-ons-card>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
-		<v-ons-card>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
-		<v-ons-card>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
-		<v-ons-card>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
-		<v-ons-card>
-			<div><v-ons-icon icon="md-home" size="45px"></v-ons-icon></div>
-			<div>HOME</div>
-		</v-ons-card>
+		
+		<div v-for="category in categories" :key="category.id">
+			<div><v-ons-icon :icon="category['icon']" size="45px"></v-ons-icon></div>
+			<div>{{category['name']}}</div>
+		</div>
+		
 	</v-ons-page>
 </template>
 
@@ -37,6 +17,27 @@
 <script>
 	
 	export default {
+		mounted: function(){
+			var self = this;
+			self.$nextTick(function(){
+				var SB = lf.schema.create('ActivityReach', 1);
+				
+				SB.connect().then(function(db){
+					var C = db.getSchema().table('category');
+					db.select(C.id, C.name, C.icon).from(C).exec().then(function(result){
+						result.forEach(function(row){
+							console.log(row);
+							self.categories.push(row);
+						});
+					});
+				});
+			});
+		},
+		data: function(){
+			return {
+				categories: []
+			}
+		},
 		methods: {
 			editButtonClick: function(){
 				//this.$emit('edit-button-click', EDIT_ACTIVITY);
