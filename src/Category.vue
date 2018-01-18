@@ -5,10 +5,17 @@
 			<div class="center">Category</div>
 		</v-ons-toolbar>
 		
-		<div v-for="category in categories" :key="category.id">
-			<div><v-ons-icon :icon="category['icon']" size="45px"></v-ons-icon></div>
-			<div>{{category['name']}}</div>
-		</div>
+		<v-ons-row>
+			<v-ons-col>
+				<v-ons-card v-for="category in categories" :key="category.id">
+					<div>
+						<v-ons-icon :icon="category['icon']" size="45px"></v-ons-icon>
+					</div>
+					<div>{{category['name']}}</div>
+					<v-ons-ripple></v-ons-ripple>
+				</v-ons-card>
+			</v-ons-col>
+		</v-ons-row>
 		
 	</v-ons-page>
 </template>
@@ -20,6 +27,7 @@
 		mounted: function(){
 			var self = this;
 			self.$nextTick(function(){
+				
 				var SB = lf.schema.create('ActivityReach', 1);
 				
 				SB.connect().then(function(db){

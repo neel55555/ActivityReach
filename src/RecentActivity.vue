@@ -23,6 +23,10 @@
 	import EDIT_ACTIVITY from './EditActivity.vue';
 	
 	export default {
+		mounted: function(){
+			var SB = lf.schema.create('ActivityReach', 1);
+			
+		},
 		methods: {
 			editButtonClick: function(){
 				this.$emit('edit-button-click', EDIT_ACTIVITY);

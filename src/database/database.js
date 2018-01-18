@@ -20,7 +20,7 @@ export default {
 			addPrimaryKey(['id']);
 			
 		schemaBuilder.createTable('activity').
-			addColumn('id', lf.Type.INTEGER).
+			addColumn('id', lf.Type.STRING).
 			addColumn('description', lf.Type.STRING).
 			addColumn('start_time', lf.Type.DATE_TIME).
 			addColumn('total_time', lf.Type.INTEGER).

@@ -1,5 +1,5 @@
 <template>
-	<v-ons-navigator @push-page="pageStack.push($event)" :page-stack="pageStack"></v-ons-navigator>
+	<v-ons-navigator :options="{callback: transitionCallback}" @push-page="pageStack.push($event)" :page-stack="pageStack"></v-ons-navigator>
 </template>
 
 <script>
@@ -28,6 +28,10 @@
 			pushPage: function(e){
 				//this.pageStack.push(e);
 				alert('hello');
+			},
+			transitionCallback: function(e){
+				//this.$ons.notification.confirm('HELLO');
+				
 			}
 		},
 		
