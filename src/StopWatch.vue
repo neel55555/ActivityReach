@@ -1,12 +1,12 @@
 <template id="stop-watch">
 	<v-ons-page>
-		<div class="stop-watch">
+		<div class="stop-watch" @hold="hold">
 			<span id="stop-watch">00:00:00:00</span><br>
 			<v-ons-icon :icon="toggleButtonIcon" @click="toggleStopWatch" class="stop-watch__icon"></v-ons-icon>
 		</div>
 		<v-ons-action-sheet :visible.sync="actionSheetVisible" cancelable>
 			<div class="action-sheet-title">
-				Categories<span @click="addCatIconClicked" class="addCatIcon">+</span>
+				Select category<span @click="addCatIconClicked" class="addCatIcon">+</span>
 			</div>
 			<v-ons-list>
 				<v-ons-list-item v-for="category in categories" :key="category.id" tappable>
@@ -25,7 +25,7 @@
 		
 		<v-ons-action-sheet :visible.sync="actionSheet2Visible" cancelable>
 			<div class="action-sheet-title">
-				Sub Category
+				Select sub-category
 			</div>
 			<v-ons-list>
 				<v-ons-list-item v-for="subCat in subCategories" :key="subCat.id" tappable>
@@ -65,19 +65,7 @@
 					self.toggleButtonIcon = 'md-play-circle';
 				});
 				
-				// FETCHING CATEGORIES FROM DATABASE
-				var SB = lf.schema.create('ActivityReach', 1);
-				Database.createTable(SB);
-				SB.connect().then(function(db){
-					Database.populate(db);
-					var C = db.getSchema().table('category');
-					var SC = db.getSchema().table('sub_category');
-					db.select(C.name,C.id,C.icon).from(C).exec().then(function(result){
-						result.forEach(function(row){
-							self.categories.push(row);
-						});
-					});
-				});
+				
 			});
 		},
 		data: function(){
@@ -87,49 +75,44 @@
 				actionSheet2Visible: false,
 				checkbox: 'checkbox',
 				toggleButtonIcon: 'md-play-circle',
-				categories: [],
 				subCategories: [],
-				catRadioValue: '',
-				subCatRadioValue: ''
+				catRadioValue: null,
+				subCatRadioValue: null,
+				hello: 'HELLO WORLD'
+			}
+		},
+		computed: {
+			categories: function(){
+				return this.$store.getters.categories;
 			}
 		},
 		watch:{
 			actionSheetVisible: function(value){
 				var self = this;
-				if(!value){
-					self.catRadioValue = '';
+				if(value){
+					self.catRadioValue = null;
 				};
 			},
 			actionSheet2Visible: function(value){
 				var self = this;
 				if(!value){
-					self.subCatRadioValue = '';
+					self.subCatRadioValue = null;
 				};
 			},
 			catRadioValue: function(value){
 				var self = this;
-				if(value !== ''){
+				if(value){
 					console.log('Selected category:');
 					console.log(value);
-					var SB = lf.schema.create('ActivityReach', 1);
 					
-					SB.connect().then(function(db){
-						var SC = db.getSchema().table('sub_category');
-						db.select(SC.id, SC.name).from(SC).where(SC.category_id.eq(value))
-						.exec()
-						.then(function(row){
-							console.log('Corresponding sub-categories:');
-							console.log(row);
-							self.subCategories = row;
-						});
-					});
-					//self.actionSheetVisible = false;
+					self.subCategories = self.$store.getters.sub_categories[value];
+					self.actionSheetVisible = false;
 					self.actionSheet2Visible = true;
 				};
 			},
 			subCatRadioValue: function(value){
 				var self = this;
-				if(value !== ''){
+				if(value){
 					console.log('Selected sub-category');
 					console.log(value);
 					var saveConfirm = self.$ons.notification.confirm('Want to save?');
@@ -164,6 +147,21 @@
 										
 										$('#stop-watch').runner('reset');
 										self.$ons.notification.toast('Activity has been saved', {timeout: 2000})
+										
+										//ADD NEW ACTIVITY TO RECENT
+										var C = db.getSchema().table('category');
+										var SC = db.getSchema().table('sub_category');
+										var A = db.getSchema().table('activity');
+										db.select(A.formatted_time, A.id, A.start_time, C.icon, SC.name).from(A)
+										.innerJoin(SC, SC.id.eq(A.sub_category_id))
+										.innerJoin(C, C.id.eq(SC.category_id))
+										.limit(1)
+										.orderBy(A.created_at, lf.Order.DESC)
+										.exec().then(function(result){
+											result.forEach(function(row){
+												self.$store.state.activities.unshift(row);
+											});
+										});
 									};
 								});
 							});
@@ -181,8 +179,11 @@
 				$('#stop-watch').runner('toggle');
 			},
 			addCatIconClicked: function(){
-				this.$emit('add-cat-btn-clicked', CATEGORY);
+				this.$store.state.pageStack.push(CATEGORY);
 				this.actionSheetVisible = false;
+			},
+			hold: function(){
+				$('#stop-watch').runner('reset');
 			},
 			uniqueId: function(){
 				var d = new Date().valueOf();

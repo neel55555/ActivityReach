@@ -66,11 +66,11 @@
 		font-size: 16px;
 	}
 	.description{
-		border: 2px solid #009688;
+		border: 2px solid #f2f2f2;
 		width: 100%;
 		height: 120px;
 		font-size: 16px;
-		padding: 15px;
+		padding: 10px 15px;
 	}
 </style>
 

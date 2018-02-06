@@ -1,10 +1,9 @@
 <template>
-	<v-ons-navigator :options="{callback: transitionCallback}" @push-page="pageStack.push($event)" :page-stack="pageStack"></v-ons-navigator>
+	<v-ons-navigator :options="{callback: transitionCallback}" @push-page="pageStack.push($event[0])" :page-stack="pageStack"></v-ons-navigator>
 </template>
 
 <script>
 	
-	import SPLITTER from './Splitter';
 	import EDIT_ACTIVITY from './EditActivity';
 	
 	export default {
@@ -14,7 +13,7 @@
 				activeIndex: 0,
 				isMenuOpen: false,
 				openSide: false,
-				pageStack: [SPLITTER]
+				pageStack: this.$store.getters.pageStack
 			};
 		},
 		
